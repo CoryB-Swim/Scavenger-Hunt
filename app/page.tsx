@@ -28,72 +28,142 @@ interface Team {
 const SCAVENGER_ITEMS: ScavengerItem[] = [
   {
     id: "1",
-    name: "Red Bench",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Red+Park+Bench",
-    points: 10,
+    name: "Parking Sign",
+    referenceImage: "/images/parking-sign.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "2",
-    name: "Oak Tree",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Large+Oak+Tree+with+Acorns",
-    points: 10,
+    name: "Caution Sign",
+    referenceImage: "/images/caution-sign.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "3",
-    name: "Water Fountain",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Working+Water+Fountain",
-    points: 10,
+    name: "Number 108",
+    referenceImage: "/images/number-108.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "4",
-    name: "Playground Slide",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Children's+Playground+Slide",
-    points: 10,
+    name: "Course 3 Sign",
+    referenceImage: "/images/course-3-sign.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "5",
-    name: "Park Sign",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Main+Park+Entrance+Sign",
-    points: 10,
+    name: "Park Entrance Sign",
+    referenceImage: "/images/park-entrance-sign.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "6",
-    name: "Duck Pond",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Pond+with+Ducks",
-    points: 10,
+    name: "Memorial Bench Plaque",
+    referenceImage: "/images/memorial-bench-plaque.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "7",
-    name: "Picnic Table",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Wooden+Picnic+Table",
-    points: 10,
+    name: "Tee 12 Marker",
+    referenceImage: "/images/tee-12-marker.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "8",
-    name: "Trail Marker",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Numbered+Trail+Marker+Post",
-    points: 10,
+    name: "Paw Print",
+    referenceImage: "/images/paw-print.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "9",
-    name: "Flower Garden",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Maintained+Flower+Garden",
-    points: 10,
+    name: "Baseball 288 Marker",
+    referenceImage: "/images/baseball-288-marker.jpg",
+    points: 25,
     found: false,
   },
   {
     id: "10",
-    name: "Exercise Equipment",
-    referenceImage: "/placeholder.svg?height=200&width=300&text=Outdoor+Fitness+Equipment",
-    points: 10,
+    name: "No Dogs Sign",
+    referenceImage: "/images/no-dogs-sign.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "11",
+    name: "Number 16375",
+    referenceImage: "/images/number-16375.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "12",
+    name: "Pink Ribbon Tree",
+    referenceImage: "/images/pink-ribbon-tree.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "13",
+    name: "Sunflowers",
+    referenceImage: "/images/sunflowers.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "14",
+    name: "Heads Up Sign",
+    referenceImage: "/images/heads-up-sign.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "15",
+    name: "Mining Bees Sign",
+    referenceImage: "/images/mining-bees-sign.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "16",
+    name: "Utility Numbers",
+    referenceImage: "/images/utility-numbers.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "17",
+    name: "Wildlife Habitat Sign",
+    referenceImage: "/images/wildlife-habitat-sign.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "18",
+    name: "Green Shade Canopy",
+    referenceImage: "/images/green-shade-canopy.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "19",
+    name: "Decorative Frog",
+    referenceImage: "/images/decorative-frog.jpg",
+    points: 25,
+    found: false,
+  },
+  {
+    id: "20",
+    name: "Wooden Post Marker",
+    referenceImage: "/images/wooden-post-marker.jpg",
+    points: 25,
     found: false,
   },
 ]
@@ -131,6 +201,20 @@ export default function ScavengerHuntApp() {
     }
   }, [gameState, timeRemaining])
 
+  // Escape key handler
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (showCamera) {
+          cancelCamera()
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape)
+    return () => document.removeEventListener("keydown", handleEscape)
+  }, [showCamera])
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = seconds % 60
@@ -138,10 +222,20 @@ export default function ScavengerHuntApp() {
   }
 
   const calculateScore = () => {
-    const itemPoints = items.filter((item) => item.found).length * 10
+    const itemPoints = items.filter((item) => item.found).length * 25
     const timeBonus = gameState === "finished" && timeRemaining > 0 ? Math.floor(timeRemaining / 10) : 0
     const latePenalty = gameState === "finished" && timeRemaining <= 0 ? -50 : 0
     return itemPoints + timeBonus + latePenalty
+  }
+
+  // Fisher-Yates shuffle algorithm
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const shuffled = [...array]
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+    }
+    return shuffled
   }
 
   const startGame = () => {
@@ -151,6 +245,11 @@ export default function ScavengerHuntApp() {
   }
 
   const startActualGame = () => {
+    // Shuffle the items for this game
+    const shuffledItems = shuffleArray(
+      SCAVENGER_ITEMS.map((item) => ({ ...item, found: false, photo: undefined, timestamp: undefined })),
+    )
+    setItems(shuffledItems)
     setGameState("playing")
     setGameStartTime(Date.now())
   }
@@ -448,7 +547,7 @@ export default function ScavengerHuntApp() {
                 </div>
                 <div className="bg-green-50 p-3 rounded-lg">
                   <Trophy className="w-6 h-6 mx-auto mb-2 text-green-600" />
-                  <div className="font-bold text-green-700">10 Points</div>
+                  <div className="font-bold text-green-700">25 Points</div>
                   <div className="text-sm text-gray-600">Per Item Found</div>
                 </div>
                 <div className="bg-yellow-50 p-3 rounded-lg">
@@ -578,7 +677,7 @@ export default function ScavengerHuntApp() {
                     <img
                       src={item.referenceImage || "/placeholder.svg"}
                       alt={`Reference: ${item.name}`}
-                      className="w-full h-32 object-cover rounded-lg border-2 border-gray-200"
+                      className="w-full aspect-square object-cover rounded-lg border-2 border-gray-200"
                     />
                     <p className="text-xs text-gray-500 mt-1 text-center">Find and photograph this item</p>
                   </div>
@@ -595,11 +694,32 @@ export default function ScavengerHuntApp() {
                               View Photo
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-md">
-                            <DialogHeader>
-                              <DialogTitle>{item.name}</DialogTitle>
-                            </DialogHeader>
-                            <div className="space-y-4">
+                          <DialogContent className="max-w-md max-h-[95vh] overflow-hidden flex flex-col">
+                            {/* Fixed header with close button */}
+                            <div className="sticky top-0 bg-white border-b p-4 rounded-t-lg z-10">
+                              <DialogHeader className="flex flex-row items-center justify-between">
+                                <DialogTitle className="pr-8">{item.name}</DialogTitle>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="absolute top-2 right-2 h-8 w-8 p-0 bg-red-100 hover:bg-red-200 rounded-full"
+                                  onClick={(e) => {
+                                    e.preventDefault()
+                                    // Find and click the dialog close button
+                                    const dialog = e.currentTarget.closest('[role="dialog"]')
+                                    const closeBtn = dialog?.querySelector(
+                                      "[data-radix-collection-item]",
+                                    ) as HTMLElement
+                                    closeBtn?.click()
+                                  }}
+                                >
+                                  <span className="text-lg font-bold text-red-600">×</span>
+                                </Button>
+                              </DialogHeader>
+                            </div>
+
+                            {/* Scrollable content */}
+                            <div className="flex-1 overflow-y-auto p-4 space-y-4">
                               <div>
                                 <p className="text-sm font-medium mb-2">Reference:</p>
                                 <img
@@ -616,6 +736,38 @@ export default function ScavengerHuntApp() {
                                   className="w-full rounded-lg border"
                                 />
                               </div>
+                            </div>
+
+                            {/* Fixed footer with close button */}
+                            <div className="sticky bottom-0 bg-white border-t p-4 rounded-b-lg">
+                              <Button
+                                variant="outline"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  // Find and click the dialog close button
+                                  const dialog = e.currentTarget.closest('[role="dialog"]')
+                                  const closeBtn = dialog?.querySelector("[data-radix-collection-item]") as HTMLElement
+                                  closeBtn?.click()
+                                }}
+                                className="w-full mb-2"
+                              >
+                                Close
+                              </Button>
+
+                              {/* Emergency exit button for very small screens */}
+                              <Button
+                                variant="destructive"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  // Find and click the dialog close button
+                                  const dialog = e.currentTarget.closest('[role="dialog"]')
+                                  const closeBtn = dialog?.querySelector("[data-radix-collection-item]") as HTMLElement
+                                  closeBtn?.click()
+                                }}
+                                className="w-full bg-red-600 hover:bg-red-700"
+                              >
+                                Exit Photo View
+                              </Button>
                             </div>
                           </DialogContent>
                         </Dialog>
@@ -653,81 +805,111 @@ export default function ScavengerHuntApp() {
 
         {/* Camera Modal */}
         {showCamera && (
-          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg p-4 max-w-md w-full">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-bold text-lg">Capture: {selectedItem?.name}</h3>
-                <Button onClick={cancelCamera} variant="ghost" size="sm">
-                  ✕
-                </Button>
+          <div
+            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-2"
+            onClick={cancelCamera}
+          >
+            <div
+              className="bg-white rounded-lg w-full max-w-md max-h-[95vh] overflow-y-auto relative flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Fixed header with close button */}
+              <div className="sticky top-0 bg-white border-b p-4 rounded-t-lg z-10">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-bold text-lg pr-8">Capture: {selectedItem?.name}</h3>
+                  <Button
+                    onClick={cancelCamera}
+                    variant="ghost"
+                    size="sm"
+                    className="absolute top-2 right-2 h-8 w-8 p-0 bg-red-100 hover:bg-red-200 rounded-full"
+                  >
+                    <span className="text-lg font-bold text-red-600">×</span>
+                  </Button>
+                </div>
               </div>
 
-              {/* Reference image */}
-              {selectedItem && (
-                <div className="mb-4">
-                  <p className="text-sm font-medium mb-2">Find this item:</p>
-                  <img
-                    src={selectedItem.referenceImage || "/placeholder.svg"}
-                    alt={`Reference: ${selectedItem.name}`}
-                    className="w-full h-24 object-cover rounded border"
-                  />
-                </div>
-              )}
-
-              <div className="relative mb-4">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="w-full rounded-lg bg-black"
-                  style={{ aspectRatio: "4/3" }}
-                />
-                <canvas ref={canvasRef} className="hidden" />
-                {!cameraReady && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
-                    <div className="text-center">
-                      <p className="text-gray-600 mb-3">Camera not available</p>
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        capture="environment"
-                        onChange={(e) => {
-                          const file = e.target.files?.[0]
-                          if (file && selectedItem) {
-                            const reader = new FileReader()
-                            reader.onload = (event) => {
-                              const photoData = event.target?.result as string
-                              setItems((prev) =>
-                                prev.map((item) =>
-                                  item.id === selectedItem.id
-                                    ? { ...item, found: true, photo: photoData, timestamp: Date.now() }
-                                    : item,
-                                ),
-                              )
-                              cancelCamera()
-                            }
-                            reader.readAsDataURL(file)
-                          }
-                        }}
-                        className="hidden"
-                      />
-                      <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 hover:bg-blue-700">
-                        Choose Photo from Gallery
-                      </Button>
-                    </div>
+              {/* Scrollable content */}
+              <div className="flex-1 p-4 space-y-4">
+                {/* Reference image */}
+                {selectedItem && (
+                  <div>
+                    <p className="text-sm font-medium mb-2">Find this item:</p>
+                    <img
+                      src={selectedItem.referenceImage || "/placeholder.svg"}
+                      alt={`Reference: ${selectedItem.name}`}
+                      className="w-full aspect-square object-cover rounded border"
+                    />
                   </div>
                 )}
+
+                {/* Camera/video section */}
+                <div className="relative">
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="w-full rounded-lg bg-black"
+                    style={{ aspectRatio: "4/3" }}
+                  />
+                  <canvas ref={canvasRef} className="hidden" />
+                  {!cameraReady && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
+                      <div className="text-center p-4">
+                        <p className="text-gray-600 mb-3">Camera not available</p>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0]
+                            if (file && selectedItem) {
+                              const reader = new FileReader()
+                              reader.onload = (event) => {
+                                const photoData = event.target?.result as string
+                                setItems((prev) =>
+                                  prev.map((item) =>
+                                    item.id === selectedItem.id
+                                      ? { ...item, found: true, photo: photoData, timestamp: Date.now() }
+                                      : item,
+                                  ),
+                                )
+                                cancelCamera()
+                              }
+                              reader.readAsDataURL(file)
+                            }
+                          }}
+                          className="hidden"
+                        />
+                        <Button onClick={() => fileInputRef.current?.click()} className="bg-blue-600 hover:bg-blue-700">
+                          Choose Photo from Gallery
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="flex gap-2">
-                <Button onClick={capturePhoto} disabled={!cameraReady} className="flex-1">
-                  <Camera className="w-4 h-4 mr-2" />
-                  Capture
-                </Button>
-                <Button onClick={cancelCamera} variant="outline" className="flex-1 bg-transparent">
-                  Cancel
+              {/* Fixed footer with action buttons */}
+              <div className="sticky bottom-0 bg-white border-t p-4 rounded-b-lg">
+                <div className="flex gap-2">
+                  <Button onClick={capturePhoto} disabled={!cameraReady} className="flex-1">
+                    <Camera className="w-4 h-4 mr-2" />
+                    Capture
+                  </Button>
+                  <Button onClick={cancelCamera} variant="outline" className="flex-1 bg-transparent">
+                    Cancel
+                  </Button>
+                </div>
+
+                {/* Emergency exit button for very small screens */}
+                <Button
+                  onClick={cancelCamera}
+                  variant="destructive"
+                  className="w-full mt-2 bg-red-600 hover:bg-red-700"
+                >
+                  Exit Camera
                 </Button>
               </div>
             </div>
@@ -740,67 +922,226 @@ export default function ScavengerHuntApp() {
   // Finished state
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 p-4">
-      <div className="max-w-2xl mx-auto">
-        <Card className="text-center">
-          <CardHeader>
+      <div className="max-w-4xl mx-auto">
+        {/* Header with Final Results */}
+        <Card className="mb-6">
+          <CardHeader className="text-center">
             <CardTitle className="text-3xl font-bold text-green-700 flex items-center justify-center gap-2">
               <Trophy className="w-8 h-8" />
               Game Complete!
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="text-6xl font-bold text-blue-700">{calculateScore()}</div>
-            <p className="text-xl text-gray-600">Final Score</p>
-
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="bg-green-100 p-4 rounded-lg">
-                <div className="text-2xl font-bold text-green-700">{items.filter((item) => item.found).length}</div>
-                <p className="text-sm text-green-600">Items Found</p>
-                <p className="text-xs text-gray-500">{items.filter((item) => item.found).length * 10} points</p>
+          <CardContent>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="flex items-center gap-2 text-2xl font-bold text-red-600">
+                    <Clock className="w-6 h-6" />
+                    {formatTime(timeRemaining)}
+                  </div>
+                  <p className="text-sm text-gray-600">Final Time</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-700">{calculateScore()}</div>
+                  <p className="text-sm text-gray-600">Final Score</p>
+                </div>
               </div>
-              <div className="bg-blue-100 p-4 rounded-lg">
-                <div className="text-2xl font-bold text-blue-700">{formatTime(Math.max(0, timeRemaining))}</div>
-                <p className="text-sm text-blue-600">Time Bonus</p>
-                <p className="text-xs text-gray-500">
-                  {timeRemaining > 0 ? `+${Math.floor(timeRemaining / 10)}` : timeRemaining === 0 ? "-50" : "0"} points
+              <div className="text-right">
+                <h2 className="font-bold text-lg">{team.name}</h2>
+                <p className="text-sm text-gray-600">
+                  {items.filter((item) => item.found).length}/{items.length} items found
                 </p>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            <Alert>
-              <CheckCircle2 className="h-4 w-4" />
-              <AlertDescription>
-                <strong>Submission Complete!</strong>
-                <br />
-                Your photos and score have been recorded. Please wait for coach verification of your items.
-              </AlertDescription>
-            </Alert>
-
-            <div className="text-left">
-              <h3 className="font-semibold mb-2">Items Captured:</h3>
-              <div className="space-y-1">
-                {items
-                  .filter((item) => item.found)
-                  .map((item) => (
-                    <div key={item.id} className="flex items-center gap-2 text-sm">
-                      <CheckCircle2 className="w-4 h-4 text-green-600" />
+        {/* Items Grid - Same as playing state but read-only */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          {items.map((item) => (
+            <Card
+              key={item.id}
+              className={`${item.found ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-200"}`}
+            >
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <h3 className="font-semibold flex items-center gap-2">
+                      {item.found ? (
+                        <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      ) : (
+                        <div className="w-5 h-5 border-2 border-gray-400 rounded-full bg-gray-200" />
+                      )}
                       {item.name}
-                    </div>
-                  ))}
-              </div>
-            </div>
+                    </h3>
+                  </div>
+                  <Badge variant={item.found ? "default" : "secondary"}>{item.points} pts</Badge>
+                </div>
 
+                {/* Reference Image */}
+                <div className="mb-3">
+                  <img
+                    src={item.referenceImage || "/placeholder.svg"}
+                    alt={`Reference: ${item.name}`}
+                    className="w-full aspect-square object-cover rounded-lg border-2 border-gray-200"
+                  />
+                  <p className="text-xs text-gray-500 mt-1 text-center">{item.found ? "Target item" : "Not found"}</p>
+                </div>
+
+                {item.found ? (
+                  <div className="space-y-2">
+                    <Badge variant="outline" className="text-green-700 border-green-300">
+                      ✓ Captured
+                    </Badge>
+                    {item.photo && (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="ml-2 bg-transparent">
+                            View Photo
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md max-h-[95vh] overflow-hidden flex flex-col">
+                          {/* Fixed header with close button */}
+                          <div className="sticky top-0 bg-white border-b p-4 rounded-t-lg z-10">
+                            <DialogHeader className="flex flex-row items-center justify-between">
+                              <DialogTitle className="pr-8">{item.name}</DialogTitle>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="absolute top-2 right-2 h-8 w-8 p-0 bg-red-100 hover:bg-red-200 rounded-full"
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  // Find and click the dialog close button
+                                  const dialog = e.currentTarget.closest('[role="dialog"]')
+                                  const closeBtn = dialog?.querySelector("[data-radix-collection-item]") as HTMLElement
+                                  closeBtn?.click()
+                                }}
+                              >
+                                <span className="text-lg font-bold text-red-600">×</span>
+                              </Button>
+                            </DialogHeader>
+                          </div>
+
+                          {/* Scrollable content */}
+                          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                            <div>
+                              <p className="text-sm font-medium mb-2">Reference:</p>
+                              <img
+                                src={item.referenceImage || "/placeholder.svg"}
+                                alt={`Reference: ${item.name}`}
+                                className="w-full rounded-lg border"
+                              />
+                            </div>
+                            <div>
+                              <p className="text-sm font-medium mb-2">Your Photo:</p>
+                              <img
+                                src={item.photo || "/placeholder.svg"}
+                                alt={item.name}
+                                className="w-full rounded-lg border"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Fixed footer with close button */}
+                          <div className="sticky bottom-0 bg-white border-t p-4 rounded-b-lg">
+                            <Button
+                              variant="outline"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                // Find and click the dialog close button
+                                const dialog = e.currentTarget.closest('[role="dialog"]')
+                                const closeBtn = dialog?.querySelector("[data-radix-collection-item]") as HTMLElement
+                                closeBtn?.click()
+                              }}
+                              className="w-full mb-2"
+                            >
+                              Close
+                            </Button>
+
+                            {/* Emergency exit button for very small screens */}
+                            <Button
+                              variant="destructive"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                // Find and click the dialog close button
+                                const dialog = e.currentTarget.closest('[role="dialog"]')
+                                const closeBtn = dialog?.querySelector("[data-radix-collection-item]") as HTMLElement
+                                closeBtn?.click()
+                              }}
+                              className="w-full bg-red-600 hover:bg-red-700"
+                            >
+                              Exit Photo View
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-2">
+                    <Badge variant="outline" className="text-gray-500 border-gray-300">
+                      Not Found
+                    </Badge>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Game Complete Summary */}
+        <Card className="mb-6">
+          <CardContent className="p-6">
+            <div className="text-center space-y-4">
+              <div className="text-6xl font-bold text-blue-700">{calculateScore()}</div>
+              <p className="text-xl text-gray-600">Final Score</p>
+
+              <div className="grid grid-cols-2 gap-4 text-center">
+                <div className="bg-green-100 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-green-700">{items.filter((item) => item.found).length}</div>
+                  <p className="text-sm text-green-600">Items Found</p>
+                  <p className="text-xs text-gray-500">{items.filter((item) => item.found).length * 25} points</p>
+                </div>
+                <div className="bg-blue-100 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-700">{formatTime(Math.max(0, timeRemaining))}</div>
+                  <p className="text-sm text-blue-600">Time Bonus</p>
+                  <p className="text-xs text-gray-500">
+                    {timeRemaining > 0 ? `+${Math.floor(timeRemaining / 10)}` : timeRemaining === 0 ? "-50" : "0"}{" "}
+                    points
+                  </p>
+                </div>
+              </div>
+
+              <Alert>
+                <CheckCircle2 className="h-4 w-4" />
+                <AlertDescription>
+                  <strong>Submission Complete!</strong>
+                  <br />
+                  Your photos and score have been recorded. Please wait for coach verification of your items.
+                </AlertDescription>
+              </Alert>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* New Game Button */}
+        <Card>
+          <CardContent className="p-4 text-center">
             <Button
               onClick={() => {
                 setGameState("setup")
-                setItems(SCAVENGER_ITEMS)
+                const shuffledItems = shuffleArray(
+                  SCAVENGER_ITEMS.map((item) => ({ ...item, found: false, photo: undefined, timestamp: undefined })),
+                )
+                setItems(shuffledItems)
                 setTimeRemaining(GAME_DURATION)
                 setTeam({ name: "", members: [""] })
                 setRulesAccepted({})
               }}
-              className="w-full"
-              variant="outline"
+              className="w-full bg-green-600 hover:bg-green-700"
+              size="lg"
             >
+              <Play className="w-5 h-5 mr-2" />
               Start New Game
             </Button>
           </CardContent>
